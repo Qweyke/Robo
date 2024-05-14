@@ -19,7 +19,7 @@
 %token IF ELSE WHILE
 %token EQL NEQL  
 
-%type <node> program_body program_field condition inequality els number direction
+%type <node> program_body program_field condition inequality els number step_direction
 
 %start program
 
@@ -44,7 +44,7 @@ condition:
     |BIN inequality number {$$ = CrtNode(NODE_BIN, $2, $3);}
     ;
 
-inequality:
+inequality: // no need to fold // getting type only
     '>' {$$ = CrtNode(NODE_MORE, NULL, NULL);}
     |'<' {$$ = CrtNode(NODE_LESS, NULL, NULL);}
     |EQL {$$ = CrtNode(NODE_EQL, NULL, NULL);}
@@ -57,10 +57,10 @@ els:
 program_field:
     GRAB_TRASH {$$ = CrtNode(NODE_GRAB, NULL, NULL);}
     |DROP_TRASH {$$ = CrtNode(NODE_DROP, NULL, NULL);}
-    |direction number {$$ = CrtNode(NODE_DIRECTION, $1, $2);}
+    |step_direction number {$$ = CrtNode(NODE_SPDIRECTION, $1, $2);}
     ;
 
-direction:
+step_direction:
     UP {$$ = CrtNode(NODE_UP, NULL, NULL);}
     |DWN {$$ = CrtNode(NODE_DOWN, NULL, NULL);}
     |LFT {$$ = CrtNode(NODE_LEFT, NULL, NULL);}

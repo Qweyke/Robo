@@ -36,7 +36,7 @@ typedef struct {
 
 enum node_types {
     NODE_SEMICOL,
-    NODE_DIRECTION,
+    NODE_SPDIRECTION,
     //NODE_START,
     //NODE_STOP,
     NODE_BREAK,
@@ -92,15 +92,13 @@ Base base;
 Trash *trash;
 int bin_left = BIN_CAPACITY;
 int trash_qnty;
+int line_number = 1;
+
+void ReadEnvFile(FILE* file_env);
 
 AstNode *CrtNode(enum node_types nd_type, AstNode *l_nd, AstNode *r_nd);
 AstNode *CrtNumNode(int digit);
 AstNode *CrtLogicNode(enum node_types nd_type, AstNode *cndn, AstNode *bdy, AstNode *es);
 
 int FoldAst(AstNode *);
-//void FoldNumNode(int steps, char direction);
-void FoldLogicNode(char logic_type);
-
 void FreeAst(AstNode *);
-
-void ReadEnvFile(FILE* file_env);
