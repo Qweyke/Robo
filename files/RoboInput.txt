@@ -1,0 +1,19 @@
+START
+while (EMPTY) {
+    RIGHT 1;
+}
+GRAB;
+RIGHT 5;
+if (TRASH) {
+    GRAB;
+}
+LEFT 3;
+if (BIN < 1) {
+    BASE;
+}
+else {
+    UP 1;
+    GRAB;
+    BASE;
+}
+STOP
