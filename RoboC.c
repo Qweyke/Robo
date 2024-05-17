@@ -223,7 +223,7 @@ int FoldAst(AstNode *ast) {
     case NODE_GRAB:
         bin_left --;  // get 1 piece of junk
         line_number ++;
-        frprintf(file_yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more", line_number, robo.crds.l, robo.crds.w, robo.bin);    
+        fprintf(file_yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more", line_number, robo.crds.l, robo.crds.w, robo.bin);    
         break;
 
     case NODE_DROP:
@@ -263,7 +263,7 @@ int FoldAst(AstNode *ast) {
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
-                robo.crds.w = robo.crds.l - steps;
+                robo.crds.l = robo.crds.l - steps;
                 fprintf(file_yyout, "%d. Robo moved LEFT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;         
 
@@ -273,7 +273,7 @@ int FoldAst(AstNode *ast) {
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
-                robo.crds.w = robo.crds.l + steps;
+                robo.crds.l = robo.crds.l + steps;
                 fprintf(file_yyout, "%d. Robo moved RIGHT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;     
 
@@ -306,14 +306,45 @@ int FoldAst(AstNode *ast) {
 void FreeAst(AstNode *ast) {
     
     switch(ast->node_type){ 
-        case NODE_IF:
-            
+        
+        case NODE_WHILE:
+        case NODE_IF:            
             if ((((LogicNode *)ast)->body) != NULL) {
                 FreeAst(((LogicNode *)ast)->body);
             }
-            
+            if ((((LogicNode *)ast)->els) != NULL) {
+                FreeAst(((LogicNode *)ast)->els);
+            }
+            FreeAst(((LogicNode *)ast)->cond);
+            free(ast);
+            break;
 
+        case NODE_SPDIRECTION:
+        case NODE_BIN:
+            FreeAst(ast->left_node);
+            FreeAst(ast->right_node);
+            free(ast);
+            break;
+
+        case NODE_ELSE:
+        case NODE_SEMICOL:
+            FreeAst(ast->left_node);
+            free(ast);
+            break;
+
+        case NODE_UP:
+        case NODE_DOWN:
+        case NODE_LEFT:
+        case NODE_RIGHT:
+        case NODE_DROP:
+        case NODE_GRAB:
+        case NODE_MORE:
+        case NODE_LESS:
+        case NODE_EQL:
+        case NODE_NEQL:
+        case NODE_EMPTY:
+        case NODE_TRASH:
+            free(ast);
+            break;        
     }
-    
-
 }
