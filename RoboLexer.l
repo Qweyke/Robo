@@ -7,8 +7,6 @@
 
 %%
 
-/* Robo functions */
-
 "START" { return START; }
 "STOP" { return STOP; }
 
@@ -24,10 +22,7 @@
 "EMPTY" { return EMPTY; }
 "BIN" { return BIN; }
 
-
-/* Operators and other */
-
-[0-9]+ {yylval = atoi(yytext); return NUM;}
+[0-9]+ {yylval.integer = atoi(yytext); return NUM;}
 "if" { return IF; }
 "else" { return ELSE; }
 "while" { return WHILE; }

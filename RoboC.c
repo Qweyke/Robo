@@ -1,26 +1,39 @@
-#include <RoboHeader.h>
+#include "RoboHeader.h"
+#include "RoboParser.tab.h"
+
+int yyparse(void);
+
+FILE *file_yyin;
+FILE *file_yyout;
+
+Robo robo;
+Base base;
+Trash *trash;
+int bin_left = BIN_CAPACITY;
+int trash_qnty;
+int line_number = 1;
 
 int main(void)
 {
-    char *path_in = "RoboInput.txt";
+    char *path_in = "files/RoboInput.txt";
     FILE *file_input = fopen(path_in, "r");
     if (file_input == NULL) {
-        fprintf(stderr, "Error: unable to open file %s or it doesn't exist,", path_in);
+        fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_in);
         exit(EXIT_FAILURE);
     }
     file_yyin = file_input;
 
-    char *path_env = "RoboEnv.txt";
+    char *path_env = "files/RoboEnv.txt";
     FILE *file_env = fopen(path_env, "r");
     if (file_env == NULL) {
-        fprintf(stderr, "Error: unable to open file %s or it doesn't exist,", path_env);
+        fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_env);
         exit(EXIT_FAILURE);
     }
     
-    char *path_out = "RoboOutput.txt";
+    char *path_out = "files/RoboOutput.txt";
     FILE *file_output = fopen(path_out, "w");
     if (file_output == NULL) {
-        fprintf(stderr, "Error: unable to open file %s or it doesn't exist,", path_out);
+        fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_out);
         exit(EXIT_FAILURE);
     }
     file_yyout = file_output;
@@ -38,7 +51,7 @@ int main(void)
 
 void yyerror(char *er)
 {
-    fprintf(stderr, "Error: %s, in line %d", er, yylineno);
+    fprintf(stderr, "Error: %s, in line %d \n", er, yylineno);
     exit(EXIT_FAILURE);
 }
 
@@ -57,7 +70,7 @@ void ReadEnvFile(FILE* file_env) {
     trash_qnty = lines_cnt - 2;
     trash = (Trash *)malloc((trash_qnty) * sizeof(Trash));  // -2 bcs of base and robo lines
     if (trash == NULL) {
-        fprintf(file_yyout, "Cannot allocate memory for trash array \n");
+        fprintf(stderr, "Cannot allocate memory for trash array \n");
         exit(EXIT_FAILURE);
     }
     
@@ -88,9 +101,9 @@ void ReadEnvFile(FILE* file_env) {
 }
 
 AstNode *CrtNode(enum node_types nd_type, AstNode *l_nd, AstNode *r_nd) {
-    AstNode *a_node = (AstNode *)malloc(sizeof(AstNode));
+    AstNode *a_node = malloc(sizeof(AstNode));
     if (a_node == NULL) {
-        fprintf(file_yyout, "Cannot allocate memory for ast node \n");
+        fprintf(stderr, "Cannot allocate memory for ast node \n");
         exit(EXIT_FAILURE);
     }
     a_node->node_type = nd_type;
@@ -102,7 +115,7 @@ AstNode *CrtNode(enum node_types nd_type, AstNode *l_nd, AstNode *r_nd) {
 AstNode *CrtNumNode(int digit) {
     NumNode *num_node = malloc(sizeof(NumNode));
     if (num_node == NULL) {
-        fprintf(file_yyout, "Cannot allocate memory for num node \n");
+        fprintf(stderr, "Cannot allocate memory for num node \n");
         exit(EXIT_FAILURE);
     }
     num_node->node_type = NODE_NUM;
@@ -113,7 +126,7 @@ AstNode *CrtNumNode(int digit) {
 AstNode *CrtLogicNode(enum node_types nd_type, AstNode *cndn, AstNode *bdy, AstNode *es) {
     LogicNode *logic_node = malloc(sizeof(NumNode));
     if (logic_node == NULL) {
-        fprintf(file_yyout, "Cannot allocate memory for logic node \n");
+        fprintf(stderr, "Cannot allocate memory for logic node \n");
         exit(EXIT_FAILURE);
     }
     logic_node->node_type = nd_type;
@@ -215,7 +228,7 @@ int FoldAst(AstNode *ast) {
         }
 
         else {
-            fprintf(file_yyout, "Error in comparison case BIN \n");
+            fprintf(stderr, "Error in comparison case BIN \n");
             exit(EXIT_FAILURE);
         }
         break;
@@ -223,13 +236,13 @@ int FoldAst(AstNode *ast) {
     case NODE_GRAB:
         bin_left --;  // get 1 piece of junk
         line_number ++;
-        fprintf(file_yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more", line_number, robo.crds.l, robo.crds.w, robo.bin);    
+        fprintf(file_yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more \n", line_number, robo.crds.l, robo.crds.w, robo.bin);    
         break;
 
     case NODE_DROP:
         bin_left = BIN_CAPACITY; // drop all junk on base
         line_number ++;
-        fprintf(file_yyout, "%d. Robo dropped all trash at base [%d length][%d width]. Bin capacity restored", line_number, base.crds.l, base.crds.w);
+        fprintf(file_yyout, "%d. Robo dropped all trash at base [%d length][%d width]. Bin capacity restored \n", line_number, base.crds.l, base.crds.w);
         break;    
 
     case NODE_SPDIRECTION:
@@ -239,7 +252,7 @@ int FoldAst(AstNode *ast) {
             {
             case 1:
                 if (robo.crds.w - steps < 1 || robo.crds.w - steps > 20) {
-                    fprintf(file_yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped!");
+                    fprintf(file_yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
@@ -249,7 +262,7 @@ int FoldAst(AstNode *ast) {
 
             case 2:
                 if (robo.crds.w + steps < 1 || robo.crds.w + steps > 20) {
-                    fprintf(file_yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped!");
+                    fprintf(file_yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
@@ -259,7 +272,7 @@ int FoldAst(AstNode *ast) {
 
             case 3:
                 if (robo.crds.l - steps < 1 || robo.crds.l - steps > 20) {
-                    fprintf(file_yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped!");
+                    fprintf(file_yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
@@ -269,12 +282,12 @@ int FoldAst(AstNode *ast) {
 
             case 4:
                 if (robo.crds.l + steps < 1 || robo.crds.l + steps > 20) {
-                    fprintf(file_yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped!");
+                    fprintf(file_yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
                 robo.crds.l = robo.crds.l + steps;
-                fprintf(file_yyout, "%d. Robo moved RIGHT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
+                fprintf(file_yyout, "%d. Robo moved RIGHT to [%d][%d] \n", line_number, robo.crds.l, robo.crds.w);
                 break;     
 
             default:
@@ -297,7 +310,7 @@ int FoldAst(AstNode *ast) {
         break;
 
     default:
-        fprintf(file_yyout, "Error in AST folding");
+        fprintf(stderr, "Error in AST folding \n");
         exit(EXIT_FAILURE);        
     }
     return fold_res;
@@ -345,6 +358,11 @@ void FreeAst(AstNode *ast) {
         case NODE_EMPTY:
         case NODE_TRASH:
             free(ast);
-            break;        
+            break;     
+        
+        default:
+            printf("Error in freeing, bad nodetype = %c,%d\n",
+                    ast->node_type, ast->node_type);
+            break;
     }
 }

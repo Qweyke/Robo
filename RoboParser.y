@@ -1,10 +1,10 @@
 %{
 #include "RoboHeader.h"
-
 %}
 
 %union{
     AstNode *node;
+    int integer;
 }
 
 %token TRASH EMPTY BIN
@@ -15,10 +15,10 @@
 
 %token UP DWN LFT RGHT
 
-%token NUM
 %token IF ELSE WHILE
 %token EQL NEQL  
 
+%token <integer> NUM
 %type <node> program_body program_field condition inequality els number step_direction
 
 %start program
@@ -26,9 +26,9 @@
 %%
 
 program:
-    START program_body STOP {FoldAst($2); FreeAst($2); fprintf(yyout, "Program completed succsessfully");}
-    |START STOP {fprintf(yyout, "Exiting program without completion");}
-    |{fprintf(yyout, "Program file is empty");}
+    START program_body STOP {FoldAst($2); FreeAst($2); fprintf(file_yyout, "Program completed succsessfully");}
+    |START STOP {fprintf(file_yyout, "Exiting program without completion");}
+    |{fprintf(file_yyout, "Program file is empty");}
     ;
 
 program_body:

@@ -9,26 +9,30 @@ void yyerror(char *er);
 
 extern int yylineno;
 
+extern int bin_left;
+extern int trash_qnty;
+extern int line_number;
+
 extern FILE* file_yyin;
 extern FILE* file_yyout;
 
 // PROGRAM OBJECTS 
-typedef struct {
+typedef struct _Coords {
     int l; // length
     int w; // width
 }Coords; 
 
-typedef struct {
+typedef struct _Robo {
     Coords crds;
     int bin;
     int trash_cnt;
 }Robo; 
 
-typedef struct {
+typedef struct _Trash {
     Coords crds;
 }Trash;
 
-typedef struct {
+typedef struct _Base {
     Coords crds;
 }Base;  
 
@@ -61,38 +65,34 @@ enum node_types {
     NODE_NEQL
 };
 
-
-typedef struct {        // All kind of nodes in AST
+typedef struct _AstNode {        // All non-special kinds of nodes in AST
     enum node_types node_type;
-    struct AstNode *left_node;      
-    struct AstNode *right_node;
-}AstNode; 
+    struct _AstNode *left_node;      
+    struct _AstNode *right_node;
+} AstNode; 
 
-typedef struct {        // Numbers
+typedef struct _NumNode {        // Numbers
     enum node_types node_type;              
     int num;
-}NumNode;
+} NumNode;
 
-typedef struct {
+typedef struct _LogicNode {   // If, while
     enum node_types node_type;           
     AstNode *cond;      
     AstNode *body;       
     AstNode *els;        
-}LogicNode;
+} LogicNode;
 
-typedef struct {
+typedef struct _InequalNode{
     enum node_types node_type;           
     AstNode *up;      
     AstNode *body;       
     AstNode *els;        
-}InequalNode;
+} InequalNode;
 
-Robo robo;
-Base base;
-Trash *trash;
-int bin_left = BIN_CAPACITY;
-int trash_qnty;
-int line_number = 1;
+extern Robo robo;
+extern Base base;
+extern Trash *trash;
 
 void ReadEnvFile(FILE* file_env);
 
