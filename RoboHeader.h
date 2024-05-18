@@ -8,13 +8,15 @@ int yylex(void);
 void yyerror(char *er);
 
 extern int yylineno;
+extern int yydebug;
 
 extern int bin_left;
 extern int trash_qnty;
 extern int line_number;
 
-extern FILE* file_yyin;
-extern FILE* file_yyout;
+extern FILE* yyin;
+extern FILE* yyout;
+extern FILE* file_env;
 
 // PROGRAM OBJECTS 
 typedef struct _Coords {
@@ -25,7 +27,6 @@ typedef struct _Coords {
 typedef struct _Robo {
     Coords crds;
     int bin;
-    int trash_cnt;
 }Robo; 
 
 typedef struct _Trash {

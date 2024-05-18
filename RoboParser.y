@@ -18,6 +18,7 @@
 %token IF ELSE WHILE
 %token EQL NEQL  
 
+
 %token <integer> NUM
 %type <node> program_body program_field condition inequality els number step_direction
 
@@ -26,9 +27,8 @@
 %%
 
 program:
-    START program_body STOP {FoldAst($2); FreeAst($2); fprintf(file_yyout, "Program completed succsessfully");}
-    |START STOP {fprintf(file_yyout, "Exiting program without completion");}
-    |{fprintf(file_yyout, "Program file is empty");}
+    START program_body STOP {FoldAst($2); FreeAst($2); fprintf(yyout, "Program completed succsessfully\n");}
+    |START STOP {fprintf(yyout, "Exiting program without completion \n");}
     ;
 
 program_body:

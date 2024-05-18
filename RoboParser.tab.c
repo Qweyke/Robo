@@ -469,7 +469,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  9
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  24
+#define YYNRULES  23
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  46
 
@@ -522,9 +522,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    29,    29,    30,    31,    35,    36,    37,    38,    42,
-      43,    44,    48,    49,    50,    51,    54,    58,    59,    60,
-      64,    65,    66,    67,    70
+       0,    30,    30,    31,    35,    36,    37,    38,    42,    43,
+      44,    48,    49,    50,    51,    54,    58,    59,    60,    64,
+      65,    66,    67,    70
 };
 #endif
 
@@ -581,11 +581,11 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       4,     0,     0,     3,    17,    18,    20,    21,    22,    23,
-       0,     0,     0,     0,     0,     1,     0,     0,     2,     8,
-      24,    19,    10,     9,     0,     0,     0,    14,    15,    12,
-      13,     0,     0,     0,    11,     0,     0,     0,     0,     5,
-       7,     0,     6,     0,     0,    16
+       0,     0,     0,     3,    16,    17,    19,    20,    21,    22,
+       0,     0,     0,     0,     0,     1,     0,     0,     2,     7,
+      23,    18,     9,     8,     0,     0,     0,    13,    14,    11,
+      12,     0,     0,     0,    10,     0,     0,     0,     0,     4,
+       6,     0,     5,     0,     0,    15
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -635,17 +635,17 @@ static const yytype_int8 yystos[] =
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    27,    28,    28,    28,    29,    29,    29,    29,    30,
-      30,    30,    31,    31,    31,    31,    32,    33,    33,    33,
-      34,    34,    34,    34,    35
+       0,    27,    28,    28,    29,    29,    29,    29,    30,    30,
+      30,    31,    31,    31,    31,    32,    33,    33,    33,    34,
+      34,    34,    34,    35
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     2,     0,     7,     8,     7,     2,     1,
-       1,     3,     1,     1,     1,     1,     4,     1,     1,     2,
-       1,     1,     1,     1,     1
+       0,     2,     3,     2,     7,     8,     7,     2,     1,     1,
+       3,     1,     1,     1,     1,     4,     1,     1,     2,     1,
+       1,     1,     1,     1
 };
 
 
@@ -1109,145 +1109,139 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: START program_body STOP  */
-#line 29 "RoboParser.y"
-                            {FoldAst((yyvsp[-1].node)); FreeAst((yyvsp[-1].node)); fprintf(file_yyout, "Program completed succsessfully");}
+#line 30 "RoboParser.y"
+                            {FoldAst((yyvsp[-1].node)); FreeAst((yyvsp[-1].node)); fprintf(yyout, "Program completed succsessfully\n");}
 #line 1115 "RoboParser.tab.c"
     break;
 
   case 3: /* program: START STOP  */
-#line 30 "RoboParser.y"
-                {fprintf(file_yyout, "Exiting program without completion");}
+#line 31 "RoboParser.y"
+                {fprintf(yyout, "Exiting program without completion \n");}
 #line 1121 "RoboParser.tab.c"
     break;
 
-  case 4: /* program: %empty  */
-#line 31 "RoboParser.y"
-     {fprintf(file_yyout, "Program file is empty");}
+  case 4: /* program_body: IF '(' condition ')' '{' program_body '}'  */
+#line 35 "RoboParser.y"
+                                              {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
 #line 1127 "RoboParser.tab.c"
     break;
 
-  case 5: /* program_body: IF '(' condition ')' '{' program_body '}'  */
-#line 35 "RoboParser.y"
-                                              {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
+  case 5: /* program_body: IF '(' condition ')' '{' program_body '}' els  */
+#line 36 "RoboParser.y"
+                                                   {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-5].node), (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1133 "RoboParser.tab.c"
     break;
 
-  case 6: /* program_body: IF '(' condition ')' '{' program_body '}' els  */
-#line 36 "RoboParser.y"
-                                                   {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-5].node), (yyvsp[-2].node), (yyvsp[0].node));}
+  case 6: /* program_body: WHILE '(' condition ')' '{' program_body '}'  */
+#line 37 "RoboParser.y"
+                                                  {(yyval.node) = CrtLogicNode(NODE_WHILE, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
 #line 1139 "RoboParser.tab.c"
     break;
 
-  case 7: /* program_body: WHILE '(' condition ')' '{' program_body '}'  */
-#line 37 "RoboParser.y"
-                                                  {(yyval.node) = CrtLogicNode(NODE_WHILE, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
+  case 7: /* program_body: program_field ';'  */
+#line 38 "RoboParser.y"
+                       {(yyval.node) = CrtNode(NODE_SEMICOL, (yyvsp[-1].node), NULL);}
 #line 1145 "RoboParser.tab.c"
     break;
 
-  case 8: /* program_body: program_field ';'  */
-#line 38 "RoboParser.y"
-                       {(yyval.node) = CrtNode(NODE_SEMICOL, (yyvsp[-1].node), NULL);}
+  case 8: /* condition: EMPTY  */
+#line 42 "RoboParser.y"
+          {(yyval.node) = CrtNode(NODE_EMPTY, NULL, NULL);}
 #line 1151 "RoboParser.tab.c"
     break;
 
-  case 9: /* condition: EMPTY  */
-#line 42 "RoboParser.y"
-          {(yyval.node) = CrtNode(NODE_EMPTY, NULL, NULL);}
+  case 9: /* condition: TRASH  */
+#line 43 "RoboParser.y"
+           {(yyval.node) = CrtNode(NODE_TRASH, NULL, NULL);}
 #line 1157 "RoboParser.tab.c"
     break;
 
-  case 10: /* condition: TRASH  */
-#line 43 "RoboParser.y"
-           {(yyval.node) = CrtNode(NODE_TRASH, NULL, NULL);}
+  case 10: /* condition: BIN inequality number  */
+#line 44 "RoboParser.y"
+                           {(yyval.node) = CrtNode(NODE_BIN, (yyvsp[-1].node), (yyvsp[0].node));}
 #line 1163 "RoboParser.tab.c"
     break;
 
-  case 11: /* condition: BIN inequality number  */
-#line 44 "RoboParser.y"
-                           {(yyval.node) = CrtNode(NODE_BIN, (yyvsp[-1].node), (yyvsp[0].node));}
+  case 11: /* inequality: '>'  */
+#line 48 "RoboParser.y"
+        {(yyval.node) = CrtNode(NODE_MORE, NULL, NULL);}
 #line 1169 "RoboParser.tab.c"
     break;
 
-  case 12: /* inequality: '>'  */
-#line 48 "RoboParser.y"
-        {(yyval.node) = CrtNode(NODE_MORE, NULL, NULL);}
+  case 12: /* inequality: '<'  */
+#line 49 "RoboParser.y"
+         {(yyval.node) = CrtNode(NODE_LESS, NULL, NULL);}
 #line 1175 "RoboParser.tab.c"
     break;
 
-  case 13: /* inequality: '<'  */
-#line 49 "RoboParser.y"
-         {(yyval.node) = CrtNode(NODE_LESS, NULL, NULL);}
+  case 13: /* inequality: EQL  */
+#line 50 "RoboParser.y"
+         {(yyval.node) = CrtNode(NODE_EQL, NULL, NULL);}
 #line 1181 "RoboParser.tab.c"
     break;
 
-  case 14: /* inequality: EQL  */
-#line 50 "RoboParser.y"
-         {(yyval.node) = CrtNode(NODE_EQL, NULL, NULL);}
+  case 14: /* inequality: NEQL  */
+#line 51 "RoboParser.y"
+          {(yyval.node) = CrtNode(NODE_NEQL, NULL, NULL);}
 #line 1187 "RoboParser.tab.c"
     break;
 
-  case 15: /* inequality: NEQL  */
-#line 51 "RoboParser.y"
-          {(yyval.node) = CrtNode(NODE_NEQL, NULL, NULL);}
+  case 15: /* els: ELSE '{' program_body '}'  */
+#line 54 "RoboParser.y"
+                            {(yyval.node) = CrtNode(NODE_ELSE, (yyvsp[-1].node), NULL);}
 #line 1193 "RoboParser.tab.c"
     break;
 
-  case 16: /* els: ELSE '{' program_body '}'  */
-#line 54 "RoboParser.y"
-                            {(yyval.node) = CrtNode(NODE_ELSE, (yyvsp[-1].node), NULL);}
+  case 16: /* program_field: GRAB_TRASH  */
+#line 58 "RoboParser.y"
+               {(yyval.node) = CrtNode(NODE_GRAB, NULL, NULL);}
 #line 1199 "RoboParser.tab.c"
     break;
 
-  case 17: /* program_field: GRAB_TRASH  */
-#line 58 "RoboParser.y"
-               {(yyval.node) = CrtNode(NODE_GRAB, NULL, NULL);}
+  case 17: /* program_field: DROP_TRASH  */
+#line 59 "RoboParser.y"
+                {(yyval.node) = CrtNode(NODE_DROP, NULL, NULL);}
 #line 1205 "RoboParser.tab.c"
     break;
 
-  case 18: /* program_field: DROP_TRASH  */
-#line 59 "RoboParser.y"
-                {(yyval.node) = CrtNode(NODE_DROP, NULL, NULL);}
+  case 18: /* program_field: step_direction number  */
+#line 60 "RoboParser.y"
+                           {(yyval.node) = CrtNode(NODE_SPDIRECTION, (yyvsp[-1].node), (yyvsp[0].node));}
 #line 1211 "RoboParser.tab.c"
     break;
 
-  case 19: /* program_field: step_direction number  */
-#line 60 "RoboParser.y"
-                           {(yyval.node) = CrtNode(NODE_SPDIRECTION, (yyvsp[-1].node), (yyvsp[0].node));}
+  case 19: /* step_direction: UP  */
+#line 64 "RoboParser.y"
+       {(yyval.node) = CrtNode(NODE_UP, NULL, NULL);}
 #line 1217 "RoboParser.tab.c"
     break;
 
-  case 20: /* step_direction: UP  */
-#line 64 "RoboParser.y"
-       {(yyval.node) = CrtNode(NODE_UP, NULL, NULL);}
+  case 20: /* step_direction: DWN  */
+#line 65 "RoboParser.y"
+         {(yyval.node) = CrtNode(NODE_DOWN, NULL, NULL);}
 #line 1223 "RoboParser.tab.c"
     break;
 
-  case 21: /* step_direction: DWN  */
-#line 65 "RoboParser.y"
-         {(yyval.node) = CrtNode(NODE_DOWN, NULL, NULL);}
+  case 21: /* step_direction: LFT  */
+#line 66 "RoboParser.y"
+         {(yyval.node) = CrtNode(NODE_LEFT, NULL, NULL);}
 #line 1229 "RoboParser.tab.c"
     break;
 
-  case 22: /* step_direction: LFT  */
-#line 66 "RoboParser.y"
-         {(yyval.node) = CrtNode(NODE_LEFT, NULL, NULL);}
+  case 22: /* step_direction: RGHT  */
+#line 67 "RoboParser.y"
+          {(yyval.node) = CrtNode(NODE_RIGHT, NULL, NULL);}
 #line 1235 "RoboParser.tab.c"
     break;
 
-  case 23: /* step_direction: RGHT  */
-#line 67 "RoboParser.y"
-          {(yyval.node) = CrtNode(NODE_RIGHT, NULL, NULL);}
+  case 23: /* number: NUM  */
+#line 70 "RoboParser.y"
+        {(yyval.node) = CrtNumNode((yyvsp[0].integer));}
 #line 1241 "RoboParser.tab.c"
     break;
 
-  case 24: /* number: NUM  */
-#line 70 "RoboParser.y"
-        {(yyval.node) = CrtNumNode((yyvsp[0].integer));}
-#line 1247 "RoboParser.tab.c"
-    break;
 
-
-#line 1251 "RoboParser.tab.c"
+#line 1245 "RoboParser.tab.c"
 
       default: break;
     }

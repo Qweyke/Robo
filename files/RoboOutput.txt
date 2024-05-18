@@ -1,0 +1,1 @@
+Robo can't go UP beyond 20x20 borders. Program has been stoped! 

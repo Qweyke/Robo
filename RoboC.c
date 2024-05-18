@@ -3,8 +3,7 @@
 
 int yyparse(void);
 
-FILE *file_yyin;
-FILE *file_yyout;
+FILE *file_env;
 
 Robo robo;
 Base base;
@@ -16,34 +15,37 @@ int line_number = 1;
 int main(void)
 {
     char *path_in = "files/RoboInput.txt";
-    FILE *file_input = fopen(path_in, "r");
-    if (file_input == NULL) {
+    yyin = fopen(path_in, "r");
+    if (yyin == NULL) {
         fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_in);
         exit(EXIT_FAILURE);
     }
-    file_yyin = file_input;
+
+    freopen("input_file.txt", "r", stdin);
 
     char *path_env = "files/RoboEnv.txt";
-    FILE *file_env = fopen(path_env, "r");
+    file_env = fopen(path_env, "r");
     if (file_env == NULL) {
         fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_env);
         exit(EXIT_FAILURE);
     }
     
     char *path_out = "files/RoboOutput.txt";
-    FILE *file_output = fopen(path_out, "w");
-    if (file_output == NULL) {
+    yyout = fopen(path_out, "w");
+    if (yyout == NULL) {
         fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_out);
         exit(EXIT_FAILURE);
     }
-    file_yyout = file_output;
-
+    
     ReadEnvFile(file_env);
-
+    fprintf(stdout, "\n Program started \n");
+    fflush(stdout);
+    
+    yydebug = 1;
     yyparse();
 
-    fclose(file_yyin);
-    fclose(file_output);
+    fclose(yyin);
+    fclose(yyout);
     free(trash);
 
     return 0;
@@ -63,9 +65,10 @@ void ReadEnvFile(FILE* file_env) {
     int length, width;
     int t_index = 0; 
     
-    while ((line = fgetc(file_env)) !=EOF) {
+    while ((line = fgetc(file_env)) != EOF) {
         if (line == '\n') lines_cnt ++;
     }
+    if (lines_cnt > 0) lines_cnt ++; // last line doesn't have a '/n'
 
     trash_qnty = lines_cnt - 2;
     trash = (Trash *)malloc((trash_qnty) * sizeof(Trash));  // -2 bcs of base and robo lines
@@ -73,31 +76,36 @@ void ReadEnvFile(FILE* file_env) {
         fprintf(stderr, "Cannot allocate memory for trash array \n");
         exit(EXIT_FAILURE);
     }
+    fprintf(stdout, "trash qnty = %d, lines_cnt = %d \n", trash_qnty, lines_cnt );
     
     rewind(file_env);
     
-    while ((fscanf(file_env, "%c %d,%d", &obj, &length, &width)) != EOF) {        
+    while ((fscanf(file_env, " %c %d,%d", &obj, &length, &width)) != EOF) {        
         switch(obj){
             case('b'):
                 base.crds.l = length;
                 base.crds.w = width;
+                //fprintf(stdout, "Case %c, length = %d - %d, width = %d - %d \n ", obj, length, base.crds.l, width, base.crds.w);
                 break;
             case('r'):
                 robo.crds.l = length;
                 robo.crds.w = width;
                 robo.bin = BIN_CAPACITY;
-                robo.trash_cnt = 0;
+                //fprintf(stdout, "Case %c, length = %d - %d, width = %d - %d \n ", obj, length, robo.crds.l, width, robo.crds.w);
                 break;
             case('t'):
                 trash[t_index].crds.l = length;
                 trash[t_index].crds.w = width;
+                //fprintf(stdout, "Case %c, length = %d - %d, width = %d - %d \n ", obj, length, trash[t_index].crds.l, width, trash[t_index].crds.w);
                 t_index++;
                 break;
             default:
+                fprintf(stderr, "Unnknown case %c \n ", obj);
                 exit(EXIT_FAILURE);
         }
     }
     fclose(file_env);
+    fprintf(stdout, "env done" );
 }
 
 AstNode *CrtNode(enum node_types nd_type, AstNode *l_nd, AstNode *r_nd) {
@@ -124,7 +132,7 @@ AstNode *CrtNumNode(int digit) {
 }
 
 AstNode *CrtLogicNode(enum node_types nd_type, AstNode *cndn, AstNode *bdy, AstNode *es) {
-    LogicNode *logic_node = malloc(sizeof(NumNode));
+    LogicNode *logic_node = malloc(sizeof(LogicNode));
     if (logic_node == NULL) {
         fprintf(stderr, "Cannot allocate memory for logic node \n");
         exit(EXIT_FAILURE);
@@ -180,6 +188,7 @@ int FoldAst(AstNode *ast) {
         for (int i = 0; i < trash_qnty; i++) {
             if ((robo.crds.l == trash[i].crds.l) && (robo.crds.w == trash[i].crds.w)) {
                 fold_res = 0;
+                fprintf(yyout, "Hit at [%d][%d]", robo.crds.l, robo.crds.w);
                 break;
             } 
         }       
@@ -236,13 +245,13 @@ int FoldAst(AstNode *ast) {
     case NODE_GRAB:
         bin_left --;  // get 1 piece of junk
         line_number ++;
-        fprintf(file_yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more \n", line_number, robo.crds.l, robo.crds.w, robo.bin);    
+        fprintf(yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more \n", line_number, robo.crds.l, robo.crds.w, robo.bin);    
         break;
 
     case NODE_DROP:
         bin_left = BIN_CAPACITY; // drop all junk on base
         line_number ++;
-        fprintf(file_yyout, "%d. Robo dropped all trash at base [%d length][%d width]. Bin capacity restored \n", line_number, base.crds.l, base.crds.w);
+        fprintf(yyout, "%d. Robo dropped all trash at base [%d length][%d width]. Bin capacity restored \n", line_number, base.crds.l, base.crds.w);
         break;    
 
     case NODE_SPDIRECTION:
@@ -252,48 +261,47 @@ int FoldAst(AstNode *ast) {
             {
             case 1:
                 if (robo.crds.w - steps < 1 || robo.crds.w - steps > 20) {
-                    fprintf(file_yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped! \n");
+                    fprintf(yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
                 robo.crds.w = robo.crds.w - steps;
-                fprintf(file_yyout, "%d. Robo moved UP to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
+                fprintf(yyout, "%d. Robo moved UP to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;
 
             case 2:
                 if (robo.crds.w + steps < 1 || robo.crds.w + steps > 20) {
-                    fprintf(file_yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped! \n");
+                    fprintf(yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
                 robo.crds.w = robo.crds.w + steps;
-                fprintf(file_yyout, "%d. Robo moved DOWN to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
+                fprintf(yyout, "%d. Robo moved DOWN to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;
 
             case 3:
                 if (robo.crds.l - steps < 1 || robo.crds.l - steps > 20) {
-                    fprintf(file_yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped! \n");
+                    fprintf(yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
                 robo.crds.l = robo.crds.l - steps;
-                fprintf(file_yyout, "%d. Robo moved LEFT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
+                fprintf(yyout, "%d. Robo moved LEFT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;         
 
             case 4:
                 if (robo.crds.l + steps < 1 || robo.crds.l + steps > 20) {
-                    fprintf(file_yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped! \n");
+                    fprintf(yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped! \n");
                     exit(EXIT_FAILURE);
                 }
                 line_number ++;
                 robo.crds.l = robo.crds.l + steps;
-                fprintf(file_yyout, "%d. Robo moved RIGHT to [%d][%d] \n", line_number, robo.crds.l, robo.crds.w);
+                fprintf(yyout, "%d. Robo moved RIGHT to [%d][%d] \n", line_number, robo.crds.l, robo.crds.w);
                 break;     
 
             default:
                 break;
             }
-
         break;
 
     case NODE_UP:
