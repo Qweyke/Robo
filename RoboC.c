@@ -8,9 +8,8 @@ FILE *file_env;
 Robo robo;
 Base base;
 Trash *trash;
-int bin_left = BIN_CAPACITY;
 int trash_qnty;
-int line_number = 1;
+int line_number = 0;
 
 int main(void)
 {
@@ -20,8 +19,6 @@ int main(void)
         fprintf(stderr, "Error: unable to open file %s or it doesn't exist \n", path_in);
         exit(EXIT_FAILURE);
     }
-
-    freopen("input_file.txt", "r", stdin);
 
     char *path_env = "files/RoboEnv.txt";
     file_env = fopen(path_env, "r");
@@ -38,8 +35,7 @@ int main(void)
     }
     
     ReadEnvFile(file_env);
-    fprintf(stdout, "\n Program started \n");
-    fflush(stdout);
+    fprintf(yyout, "Map (20 x 20) \n");
     
     yydebug = 1;
     yyparse();
@@ -168,7 +164,7 @@ int FoldAst(AstNode *ast) {
         break;
 
     case NODE_WHILE:
-        if (FoldAst(((LogicNode*)ast)->cond) == 1) { // if cond true
+        while (FoldAst(((LogicNode*)ast)->cond) == 1) { // if cond true
             if ((((LogicNode*)ast)->body) != NULL) {
                 FoldAst(((LogicNode*)ast)->body);
             }
@@ -185,10 +181,11 @@ int FoldAst(AstNode *ast) {
 
     case NODE_EMPTY:
         fold_res = 1;
+        //fprintf(yyout, "Empty at [%d][%d] \n", robo.crds.l, robo.crds.w);
         for (int i = 0; i < trash_qnty; i++) {
             if ((robo.crds.l == trash[i].crds.l) && (robo.crds.w == trash[i].crds.w)) {
                 fold_res = 0;
-                fprintf(yyout, "Hit at [%d][%d]", robo.crds.l, robo.crds.w);
+                //fprintf(yyout, "Hit at [%d][%d] \n", robo.crds.l, robo.crds.w);
                 break;
             } 
         }       
@@ -199,6 +196,7 @@ int FoldAst(AstNode *ast) {
         for (int i = 0; i < trash_qnty; i++) {
             if ((robo.crds.l == trash[i].crds.l) && (robo.crds.w == trash[i].crds.w)) {
                 fold_res = 1;
+                robo.trash_i = i;
                 break;
             } 
         }       
@@ -209,28 +207,28 @@ int FoldAst(AstNode *ast) {
         int num_cmpr = FoldAst(ast->right_node);
         
         if (equal->node_type == 16) { // if bin >(16) num - true(1) else false(0) 
-            if (bin_left > num_cmpr) {
+            if (robo.bin > num_cmpr) {
                 fold_res = 1;            
             }
             else fold_res = 0;
         }
 
         else if (equal->node_type == 17) {
-            if (bin_left < num_cmpr) {
+            if (robo.bin < num_cmpr) {
                 fold_res = 1;            
             }
             else fold_res = 0;
         }
 
         else if (equal->node_type == 18) {
-            if (bin_left == num_cmpr) {
+            if (robo.bin == num_cmpr) {
                 fold_res = 1;            
             }
             else fold_res = 0;
         }
 
         else if (equal->node_type == 19) {
-            if (bin_left != num_cmpr) {
+            if (robo.bin != num_cmpr) {
                 fold_res = 1;            
             }
             else fold_res = 0;
@@ -243,78 +241,101 @@ int FoldAst(AstNode *ast) {
         break;
         
     case NODE_GRAB:
-        bin_left --;  // get 1 piece of junk
+        robo.bin = robo.bin - 1;  // get 1 piece of junk
         line_number ++;
-        fprintf(yyout, "%d. Robo got 1 piece of trash at [%d length][%d width]. Bin capacity = (%d) more \n", line_number, robo.crds.l, robo.crds.w, robo.bin);    
+        trash[robo.trash_i].crds.l = 0; // deleting junk from map
+        trash[robo.trash_i].crds.w = 0; 
+        fprintf(yyout, "%d. Robo wiped 1 piece of trash at [%d][%d]. Bin capacity = (%d) \n", line_number, robo.crds.l, robo.crds.w, robo.bin);    
         break;
 
     case NODE_DROP:
-        bin_left = BIN_CAPACITY; // drop all junk on base
+        robo.bin = BIN_CAPACITY; // drop all junk on base
         line_number ++;
-        fprintf(yyout, "%d. Robo dropped all trash at base [%d length][%d width]. Bin capacity restored \n", line_number, base.crds.l, base.crds.w);
+        if (robo.crds.l == base.crds.l && robo.crds.w == base.crds.w) {
+            fprintf(yyout, "%d. Robo dropped all trash at base [%d][%d]. Bin capacity restored \n", line_number, base.crds.l, base.crds.w);
+        }
+        else {
+            fprintf(yyout, "%d. What a mess! Robo dropped all junk on the floor at [%d][%d]!", line_number, robo.crds.l, robo.crds.w);
+        }
+        
         break;    
 
     case NODE_SPDIRECTION:
-        int steps = FoldAst(ast->left_node);
-        int direction = FoldAst(ast->right_node);
+        int steps = FoldAst(ast->right_node);
+        //fprintf(yyout, "node type %d\n", ast->right_node->node_type);
+        int direction = FoldAst(ast->left_node);
             switch (direction)
             {
-            case 1:
-                if (robo.crds.w - steps < 1 || robo.crds.w - steps > 20) {
-                    fprintf(yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped! \n");
-                    exit(EXIT_FAILURE);
+            case 8:
+                //fprintf(yyout, "case 1\n");
+                for (int i = 1; i <= steps; i++) {
+                    if (robo.crds.w - 1 < 1) {
+                        fprintf(yyout, "Robo can't go UP beyond 20x20 borders. Program has been stoped! \n");
+                        exit(EXIT_FAILURE);
+                    }
+                    line_number ++;
+                    robo.crds.w = robo.crds.w - 1;
+                    fprintf(yyout, "%d. Robo moved UP to [%d][%d]\n", line_number, robo.crds.l, robo.crds.w);                   
                 }
-                line_number ++;
-                robo.crds.w = robo.crds.w - steps;
-                fprintf(yyout, "%d. Robo moved UP to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;
+                
 
             case 2:
-                if (robo.crds.w + steps < 1 || robo.crds.w + steps > 20) {
-                    fprintf(yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped! \n");
-                    exit(EXIT_FAILURE);
+                //fprintf(yyout, "case 2\n");
+                for (int i = 1; i <= steps; i++) {
+                    if (robo.crds.w + 1 > 20) {
+                        fprintf(yyout, "Robo can't go DOWN beyond 20x20 borders. Program has been stoped! \n");
+                        exit(EXIT_FAILURE);
+                    }
+                    line_number ++;
+                    robo.crds.w = robo.crds.w + 1;
+                    fprintf(yyout, "%d. Robo moved DOWN to [%d][%d]\n", line_number, robo.crds.l, robo.crds.w);
                 }
-                line_number ++;
-                robo.crds.w = robo.crds.w + steps;
-                fprintf(yyout, "%d. Robo moved DOWN to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;
 
-            case 3:
-                if (robo.crds.l - steps < 1 || robo.crds.l - steps > 20) {
-                    fprintf(yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped! \n");
-                    exit(EXIT_FAILURE);
+            case 4:
+                //fprintf(yyout, "case 3\n");
+                for (int i = 1; i <= steps; i++) {
+                    if (robo.crds.l - 1 < 1) {
+                        fprintf(yyout, "Robo can't go LEFT beyond 20x20 borders. Program has been stoped! \n");
+                        exit(EXIT_FAILURE);
+                    }
+                    line_number ++;
+                    robo.crds.l = robo.crds.l - 1;
+                    fprintf(yyout, "%d. Robo moved LEFT to [%d][%d]\n", line_number, robo.crds.l, robo.crds.w);
                 }
-                line_number ++;
-                robo.crds.l = robo.crds.l - steps;
-                fprintf(yyout, "%d. Robo moved LEFT to [%d][%d]", line_number, robo.crds.l, robo.crds.w);
                 break;         
 
-            case 4:
-                if (robo.crds.l + steps < 1 || robo.crds.l + steps > 20) {
-                    fprintf(yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped! \n");
-                    exit(EXIT_FAILURE);
+            case 6:
+                //fprintf(yyout, "case 4\n");
+                for (int i = 1; i <= steps; i++) {
+                    if (robo.crds.l + 1 > 20) {
+                        fprintf(yyout, "Robo can't go RIGHT beyond 20x20 borders. Program has been stoped! \n");
+                        exit(EXIT_FAILURE);
+                    }
+                    line_number ++;
+                    robo.crds.l = robo.crds.l + 1;
+                    fprintf(yyout, "%d. Robo moved RIGHT to [%d][%d] \n", line_number, robo.crds.l, robo.crds.w);
                 }
-                line_number ++;
-                robo.crds.l = robo.crds.l + steps;
-                fprintf(yyout, "%d. Robo moved RIGHT to [%d][%d] \n", line_number, robo.crds.l, robo.crds.w);
                 break;     
 
             default:
-                break;
+                fprintf(yyout, "default in directions\n");
+                exit(EXIT_FAILURE);
             }
         break;
 
-    case NODE_UP:
-        fold_res = 1; // 1 - UP
+    case NODE_UP: // like numpad arrows
+        fold_res = 8; // 8 - UP
         break;
     case NODE_DOWN:
         fold_res = 2; // 2 - DOWN
         break;
     case NODE_LEFT:
-        fold_res = 3; // 3 - LEFT
+        fold_res = 4; // 4 - LEFT
         break;
     case NODE_RIGHT:
-        fold_res = 4; // 4 - RIGHT
+        fold_res = 6; // 6 - RIGHT
         break;
 
     default:
@@ -353,6 +374,7 @@ void FreeAst(AstNode *ast) {
             free(ast);
             break;
 
+        case NODE_NUM:
         case NODE_UP:
         case NODE_DOWN:
         case NODE_LEFT:

@@ -10,7 +10,6 @@ void yyerror(char *er);
 extern int yylineno;
 extern int yydebug;
 
-extern int bin_left;
 extern int trash_qnty;
 extern int line_number;
 
@@ -27,6 +26,7 @@ typedef struct _Coords {
 typedef struct _Robo {
     Coords crds;
     int bin;
+    int trash_i;
 }Robo; 
 
 typedef struct _Trash {

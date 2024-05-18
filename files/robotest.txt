@@ -16,3 +16,14 @@ else {
     GRAB;
 }
 STOP
+
+
+|IF '(' condition ')' '{' code_field '}' {$$ = CrtLogicNode(NODE_IF, $3, $6, NULL);}
+    |IF '(' condition ')' '{' code_field '}' els {$$ = CrtLogicNode(NODE_IF, $3, $6, $8);}
+    |WHILE '(' condition ')' '{' code_field'}' {$$ = CrtLogicNode(NODE_WHILE, $3, $6, NULL);}
+
+    code_field:
+    code_field program_field ';' {$$ = CrtNode(NODE_SEMICOL, $2, NULL);}
+    code_field code_action
+    |program_field ';' {$$ = CrtNode(NODE_SEMICOL, $1, NULL);}
+    ;

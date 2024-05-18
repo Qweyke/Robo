@@ -20,22 +20,31 @@
 
 
 %token <integer> NUM
-%type <node> program_body program_field condition inequality els number step_direction
+%type <node> program_field condition inequality els number step_direction code_action
 
 %start program
 
 %%
 
 program:
-    START program_body STOP {FoldAst($2); FreeAst($2); fprintf(yyout, "Program completed succsessfully\n");}
+    START program_body STOP {fprintf(yyout, "Program completed succsessfully\n");}
     |START STOP {fprintf(yyout, "Exiting program without completion \n");}
     ;
 
 program_body:
-    IF '(' condition ')' '{' program_body '}' {$$ = CrtLogicNode(NODE_IF, $3, $6, NULL);}
-    |IF '(' condition ')' '{' program_body '}' els {$$ = CrtLogicNode(NODE_IF, $3, $6, $8);}
-    |WHILE '(' condition ')' '{' program_body '}' {$$ = CrtLogicNode(NODE_WHILE, $3, $6, NULL);}
+    program_body code_action {FoldAst($2); FreeAst($2);}
+    |code_action {FoldAst($1); FreeAst($1);}
+    ;
+
+code_action:
+    |IF '(' condition ')' '{' code_action '}' {$$ = CrtLogicNode(NODE_IF, $3, $6, NULL);}
+    |IF '(' condition ')' '{' code_action '}' els {$$ = CrtLogicNode(NODE_IF, $3, $6, $8);}
+    |WHILE '(' condition ')' '{' code_action '}' {$$ = CrtLogicNode(NODE_WHILE, $3, $6, NULL);}   
     |program_field ';' {$$ = CrtNode(NODE_SEMICOL, $1, NULL);}
+    ;
+
+els:
+    ELSE '{'code_action'}' {$$ = CrtNode(NODE_ELSE, $3, NULL);}
     ;
 
 condition:
@@ -49,9 +58,6 @@ inequality: // no need to fold // getting type only
     |'<' {$$ = CrtNode(NODE_LESS, NULL, NULL);}
     |EQL {$$ = CrtNode(NODE_EQL, NULL, NULL);}
     |NEQL {$$ = CrtNode(NODE_NEQL, NULL, NULL);}
-    ;
-els:
-    ELSE '{'program_body'}' {$$ = CrtNode(NODE_ELSE, $3, NULL);}
     ;
 
 program_field:

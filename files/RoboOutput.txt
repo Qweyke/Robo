@@ -1,1 +1,14 @@
-Robo can't go UP beyond 20x20 borders. Program has been stoped! 
+Map (20 x 20) 
+1. Robo moved RIGHT to [3][2] 
+2. Robo moved RIGHT to [4][2] 
+3. Robo moved RIGHT to [5][2] 
+4. Robo moved RIGHT to [6][2] 
+5. Robo moved DOWN to [6][3]
+6. Robo moved DOWN to [6][4]
+7. Robo moved DOWN to [6][5]
+8. Robo moved DOWN to [6][6]
+9. Robo wiped 1 piece of trash at [6][6]. Bin capacity = (2) 
+10. Robo moved LEFT to [5][6]
+11. Robo moved LEFT to [4][6]
+12. Robo moved LEFT to [3][6]
+Program completed succsessfully
