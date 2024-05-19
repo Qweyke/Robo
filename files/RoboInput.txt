@@ -10,8 +10,13 @@ if (TRASH) {
 LEFT 3;
 if (BIN < 1) {
     UP 4;
-    LEFT 2;
-    UP 1;
-    DROP;
 }
+else {
+    UP 1;
+}
+GRAB;
+UP 3;
+LEFT 2;
+UP 1;
+DROP;
 STOP

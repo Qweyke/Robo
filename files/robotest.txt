@@ -27,3 +27,9 @@ STOP
     code_field code_action
     |program_field ';' {$$ = CrtNode(NODE_SEMICOL, $1, NULL);}
     ;
+
+
+
+    LEFT 2;
+    UP 1;
+    DROP;

@@ -37,7 +37,7 @@ program_body:
     ;
 
 code_action:
-    |IF '(' condition ')' '{' code_action '}' {$$ = CrtLogicNode(NODE_IF, $3, $6, NULL);}
+    IF '(' condition ')' '{' code_action '}' {$$ = CrtLogicNode(NODE_IF, $3, $6, NULL);}
     |IF '(' condition ')' '{' code_action '}' els {$$ = CrtLogicNode(NODE_IF, $3, $6, $8);}
     |WHILE '(' condition ')' '{' code_action '}' {$$ = CrtLogicNode(NODE_WHILE, $3, $6, NULL);}   
     |program_field ';' {$$ = CrtNode(NODE_SEMICOL, $1, NULL);}

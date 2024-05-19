@@ -84,13 +84,6 @@ typedef struct _LogicNode {   // If, while
     AstNode *els;        
 } LogicNode;
 
-typedef struct _InequalNode{
-    enum node_types node_type;           
-    AstNode *up;      
-    AstNode *body;       
-    AstNode *els;        
-} InequalNode;
-
 extern Robo robo;
 extern Base base;
 extern Trash *trash;

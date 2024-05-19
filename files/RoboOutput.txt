@@ -3,12 +3,22 @@ Map (20 x 20)
 2. Robo moved RIGHT to [4][2] 
 3. Robo moved RIGHT to [5][2] 
 4. Robo moved RIGHT to [6][2] 
-5. Robo moved DOWN to [6][3]
-6. Robo moved DOWN to [6][4]
-7. Robo moved DOWN to [6][5]
-8. Robo moved DOWN to [6][6]
-9. Robo wiped 1 piece of trash at [6][6]. Bin capacity = (2) 
-10. Robo moved LEFT to [5][6]
-11. Robo moved LEFT to [4][6]
-12. Robo moved LEFT to [3][6]
+5. Robo wiped 1 piece of trash at [6][2]. Bin capacity = (2) 
+6. Robo moved DOWN to [6][3]
+7. Robo moved DOWN to [6][4]
+8. Robo moved DOWN to [6][5]
+9. Robo moved DOWN to [6][6]
+10. Robo wiped 1 piece of trash at [6][6]. Bin capacity = (1) 
+11. Robo moved LEFT to [5][6]
+12. Robo moved LEFT to [4][6]
+13. Robo moved LEFT to [3][6]
+14. Robo moved UP to [3][5]
+15. Robo wiped 1 piece of trash at [3][5]. Bin capacity = (0) 
+16. Robo moved UP to [3][4]
+17. Robo moved UP to [3][3]
+18. Robo moved UP to [3][2]
+19. Robo moved LEFT to [2][2]
+20. Robo moved LEFT to [1][2]
+21. Robo moved UP to [1][1]
+22. Robo dropped all trash at base [1][1]. Bin capacity restored 
 Program completed succsessfully

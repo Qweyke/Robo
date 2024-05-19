@@ -463,16 +463,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  16
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   68
+#define YYLAST   55
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  27
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  26
+#define YYNRULES  25
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  55
+#define YYNSTATES  48
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   274
@@ -524,8 +524,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int8 yyrline[] =
 {
        0,    30,    30,    31,    35,    36,    40,    41,    42,    43,
-      44,    48,    52,    53,    54,    58,    59,    60,    61,    65,
-      66,    67,    71,    72,    73,    74,    77
+      47,    51,    52,    53,    57,    58,    59,    60,    64,    65,
+      66,    70,    71,    72,    73,    76
 };
 #endif
 
@@ -556,7 +556,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-18)
+#define YYPACT_NINF (-13)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -570,12 +570,11 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       4,    -5,    12,   -18,   -18,   -18,   -18,   -18,   -18,   -18,
-       5,    17,     7,    10,    14,    34,   -18,    39,    39,   -18,
-      10,    35,   -18,   -18,   -18,   -18,   -18,     9,    36,    37,
-      39,   -18,   -18,   -18,   -18,    34,    40,    41,    43,   -18,
-      38,    38,    44,     8,    16,    38,    45,   -18,    18,    46,
-     -18,   -18,    38,    22,   -18
+       3,    -6,    19,   -13,   -13,   -13,   -13,   -13,   -13,   -13,
+       1,    12,     4,   -13,     0,    22,   -13,    24,    24,   -13,
+     -13,   -13,   -13,   -13,   -13,   -13,     5,    23,    25,   -13,
+     -13,   -13,   -13,    22,    21,    27,   -13,    26,    26,    28,
+      29,    30,   -13,    31,   -13,    26,    32,   -13
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -583,24 +582,23 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     3,    19,    20,    22,    23,    24,    25,
+       0,     0,     0,     3,    18,    19,    21,    22,    23,    24,
        0,     0,     0,     5,     0,     0,     1,     0,     0,     2,
-       4,     0,    10,    26,    21,    13,    12,     0,     0,     0,
-       0,    17,    18,    15,    16,     0,     0,     0,     0,    14,
-       0,     0,     0,     0,     0,     0,     7,     9,     0,     0,
-       8,     6,     0,     0,    11
+       4,     9,    25,    20,    12,    11,     0,     0,     0,    16,
+      17,    14,    15,     0,     0,     0,    13,     0,     0,     0,
+       0,     6,     8,     0,     7,     0,     0,    10
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -18,   -18,   -18,   -12,   -18,   -17,   -18,   -18,   -18,    21
+     -13,   -13,   -13,   -12,   -13,    36,   -13,   -13,   -13,    14
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,    12,    13,    50,    28,    35,    14,    15,    24
+       0,     2,    12,    13,    44,    27,    33,    14,    15,    23
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -608,24 +606,22 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      20,    29,     3,     4,     5,     6,     7,     8,     9,    10,
-       1,    11,    16,    38,    19,     4,     5,     6,     7,     8,
-       9,    10,    21,    11,    21,    17,    31,    32,    43,    44,
-      21,    46,    21,    48,    33,    34,    21,    18,    22,    47,
-      53,    51,    25,    26,    27,    54,     4,     5,     6,     7,
-       8,     9,    10,    23,    11,    30,    39,    36,    37,     0,
-      49,     0,    40,    41,    42,     0,    45,     0,    52
+      20,     3,     4,     5,     6,     7,     8,     9,    10,     1,
+      11,    19,     4,     5,     6,     7,     8,     9,    10,    16,
+      11,    17,    29,    30,    21,    39,    40,    24,    25,    26,
+      31,    32,    18,    46,     4,     5,     6,     7,     8,     9,
+      10,    22,    11,    37,    34,    43,    35,    36,     0,    38,
+       0,    41,    42,    45,    28,    47
 };
 
 static const yytype_int8 yycheck[] =
 {
-      12,    18,     7,     8,     9,    10,    11,    12,    13,    14,
-       6,    16,     0,    30,     7,     8,     9,    10,    11,    12,
-      13,    14,    14,    16,    14,    20,    17,    18,    40,    41,
-      14,    23,    14,    45,    25,    26,    14,    20,    24,    23,
-      52,    23,     3,     4,     5,    23,     8,     9,    10,    11,
-      12,    13,    14,    19,    16,    20,    35,    21,    21,    -1,
-      15,    -1,    22,    22,    21,    -1,    22,    -1,    22
+      12,     7,     8,     9,    10,    11,    12,    13,    14,     6,
+      16,     7,     8,     9,    10,    11,    12,    13,    14,     0,
+      16,    20,    17,    18,    24,    37,    38,     3,     4,     5,
+      25,    26,    20,    45,     8,     9,    10,    11,    12,    13,
+      14,    19,    16,    22,    21,    15,    21,    33,    -1,    22,
+      -1,    23,    23,    22,    18,    23
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -634,26 +630,25 @@ static const yytype_int8 yystos[] =
 {
        0,     6,    28,     7,     8,     9,    10,    11,    12,    13,
       14,    16,    29,    30,    34,    35,     0,    20,    20,     7,
-      30,    14,    24,    19,    36,     3,     4,     5,    32,    32,
-      20,    17,    18,    25,    26,    33,    21,    21,    32,    36,
-      22,    22,    21,    30,    30,    22,    23,    23,    30,    15,
-      31,    23,    22,    30,    23
+      30,    24,    19,    36,     3,     4,     5,    32,    32,    17,
+      18,    25,    26,    33,    21,    21,    36,    22,    22,    30,
+      30,    23,    23,    15,    31,    22,    30,    23
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    27,    28,    28,    29,    29,    30,    30,    30,    30,
-      30,    31,    32,    32,    32,    33,    33,    33,    33,    34,
-      34,    34,    35,    35,    35,    35,    36
+      31,    32,    32,    32,    33,    33,    33,    33,    34,    34,
+      34,    35,    35,    35,    35,    36
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     2,     2,     1,     8,     7,     8,     7,
-       2,     4,     1,     1,     3,     1,     1,     1,     1,     1,
-       1,     2,     1,     1,     1,     1,     1
+       0,     2,     3,     2,     2,     1,     7,     8,     7,     2,
+       4,     1,     1,     3,     1,     1,     1,     1,     1,     1,
+       2,     1,     1,     1,     1,     1
 };
 
 
@@ -1119,155 +1114,149 @@ yyreduce:
   case 2: /* program: START program_body STOP  */
 #line 30 "RoboParser.y"
                             {fprintf(yyout, "Program completed succsessfully\n");}
-#line 1123 "RoboParser.tab.c"
+#line 1118 "RoboParser.tab.c"
     break;
 
   case 3: /* program: START STOP  */
 #line 31 "RoboParser.y"
                 {fprintf(yyout, "Exiting program without completion \n");}
-#line 1129 "RoboParser.tab.c"
+#line 1124 "RoboParser.tab.c"
     break;
 
   case 4: /* program_body: program_body code_action  */
 #line 35 "RoboParser.y"
                              {FoldAst((yyvsp[0].node)); FreeAst((yyvsp[0].node));}
-#line 1135 "RoboParser.tab.c"
+#line 1130 "RoboParser.tab.c"
     break;
 
   case 5: /* program_body: code_action  */
 #line 36 "RoboParser.y"
                  {FoldAst((yyvsp[0].node)); FreeAst((yyvsp[0].node));}
-#line 1141 "RoboParser.tab.c"
+#line 1136 "RoboParser.tab.c"
     break;
 
-  case 6: /* code_action: code_action IF '(' condition ')' '{' code_action '}'  */
+  case 6: /* code_action: IF '(' condition ')' '{' code_action '}'  */
 #line 40 "RoboParser.y"
-                                                         {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
-#line 1147 "RoboParser.tab.c"
+                                             {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
+#line 1142 "RoboParser.tab.c"
     break;
 
-  case 7: /* code_action: IF '(' condition ')' '{' code_action '}'  */
+  case 7: /* code_action: IF '(' condition ')' '{' code_action '}' els  */
 #line 41 "RoboParser.y"
-                                              {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
-#line 1153 "RoboParser.tab.c"
-    break;
-
-  case 8: /* code_action: IF '(' condition ')' '{' code_action '}' els  */
-#line 42 "RoboParser.y"
                                                   {(yyval.node) = CrtLogicNode(NODE_IF, (yyvsp[-5].node), (yyvsp[-2].node), (yyvsp[0].node));}
-#line 1159 "RoboParser.tab.c"
+#line 1148 "RoboParser.tab.c"
     break;
 
-  case 9: /* code_action: WHILE '(' condition ')' '{' code_action '}'  */
-#line 43 "RoboParser.y"
+  case 8: /* code_action: WHILE '(' condition ')' '{' code_action '}'  */
+#line 42 "RoboParser.y"
                                                  {(yyval.node) = CrtLogicNode(NODE_WHILE, (yyvsp[-4].node), (yyvsp[-1].node), NULL);}
-#line 1165 "RoboParser.tab.c"
+#line 1154 "RoboParser.tab.c"
     break;
 
-  case 10: /* code_action: program_field ';'  */
-#line 44 "RoboParser.y"
+  case 9: /* code_action: program_field ';'  */
+#line 43 "RoboParser.y"
                        {(yyval.node) = CrtNode(NODE_SEMICOL, (yyvsp[-1].node), NULL);}
-#line 1171 "RoboParser.tab.c"
+#line 1160 "RoboParser.tab.c"
     break;
 
-  case 11: /* els: ELSE '{' code_action '}'  */
-#line 48 "RoboParser.y"
+  case 10: /* els: ELSE '{' code_action '}'  */
+#line 47 "RoboParser.y"
                            {(yyval.node) = CrtNode(NODE_ELSE, (yyvsp[-1].node), NULL);}
-#line 1177 "RoboParser.tab.c"
+#line 1166 "RoboParser.tab.c"
     break;
 
-  case 12: /* condition: EMPTY  */
-#line 52 "RoboParser.y"
+  case 11: /* condition: EMPTY  */
+#line 51 "RoboParser.y"
           {(yyval.node) = CrtNode(NODE_EMPTY, NULL, NULL);}
-#line 1183 "RoboParser.tab.c"
+#line 1172 "RoboParser.tab.c"
     break;
 
-  case 13: /* condition: TRASH  */
-#line 53 "RoboParser.y"
+  case 12: /* condition: TRASH  */
+#line 52 "RoboParser.y"
            {(yyval.node) = CrtNode(NODE_TRASH, NULL, NULL);}
-#line 1189 "RoboParser.tab.c"
+#line 1178 "RoboParser.tab.c"
     break;
 
-  case 14: /* condition: BIN inequality number  */
-#line 54 "RoboParser.y"
+  case 13: /* condition: BIN inequality number  */
+#line 53 "RoboParser.y"
                            {(yyval.node) = CrtNode(NODE_BIN, (yyvsp[-1].node), (yyvsp[0].node));}
-#line 1195 "RoboParser.tab.c"
+#line 1184 "RoboParser.tab.c"
     break;
 
-  case 15: /* inequality: '>'  */
-#line 58 "RoboParser.y"
+  case 14: /* inequality: '>'  */
+#line 57 "RoboParser.y"
         {(yyval.node) = CrtNode(NODE_MORE, NULL, NULL);}
-#line 1201 "RoboParser.tab.c"
+#line 1190 "RoboParser.tab.c"
     break;
 
-  case 16: /* inequality: '<'  */
-#line 59 "RoboParser.y"
+  case 15: /* inequality: '<'  */
+#line 58 "RoboParser.y"
          {(yyval.node) = CrtNode(NODE_LESS, NULL, NULL);}
-#line 1207 "RoboParser.tab.c"
+#line 1196 "RoboParser.tab.c"
     break;
 
-  case 17: /* inequality: EQL  */
-#line 60 "RoboParser.y"
+  case 16: /* inequality: EQL  */
+#line 59 "RoboParser.y"
          {(yyval.node) = CrtNode(NODE_EQL, NULL, NULL);}
-#line 1213 "RoboParser.tab.c"
+#line 1202 "RoboParser.tab.c"
     break;
 
-  case 18: /* inequality: NEQL  */
-#line 61 "RoboParser.y"
+  case 17: /* inequality: NEQL  */
+#line 60 "RoboParser.y"
           {(yyval.node) = CrtNode(NODE_NEQL, NULL, NULL);}
-#line 1219 "RoboParser.tab.c"
+#line 1208 "RoboParser.tab.c"
     break;
 
-  case 19: /* program_field: GRAB_TRASH  */
-#line 65 "RoboParser.y"
+  case 18: /* program_field: GRAB_TRASH  */
+#line 64 "RoboParser.y"
                {(yyval.node) = CrtNode(NODE_GRAB, NULL, NULL);}
-#line 1225 "RoboParser.tab.c"
+#line 1214 "RoboParser.tab.c"
     break;
 
-  case 20: /* program_field: DROP_TRASH  */
-#line 66 "RoboParser.y"
+  case 19: /* program_field: DROP_TRASH  */
+#line 65 "RoboParser.y"
                 {(yyval.node) = CrtNode(NODE_DROP, NULL, NULL);}
-#line 1231 "RoboParser.tab.c"
+#line 1220 "RoboParser.tab.c"
     break;
 
-  case 21: /* program_field: step_direction number  */
-#line 67 "RoboParser.y"
+  case 20: /* program_field: step_direction number  */
+#line 66 "RoboParser.y"
                            {(yyval.node) = CrtNode(NODE_SPDIRECTION, (yyvsp[-1].node), (yyvsp[0].node));}
-#line 1237 "RoboParser.tab.c"
+#line 1226 "RoboParser.tab.c"
     break;
 
-  case 22: /* step_direction: UP  */
-#line 71 "RoboParser.y"
+  case 21: /* step_direction: UP  */
+#line 70 "RoboParser.y"
        {(yyval.node) = CrtNode(NODE_UP, NULL, NULL);}
-#line 1243 "RoboParser.tab.c"
+#line 1232 "RoboParser.tab.c"
     break;
 
-  case 23: /* step_direction: DWN  */
-#line 72 "RoboParser.y"
+  case 22: /* step_direction: DWN  */
+#line 71 "RoboParser.y"
          {(yyval.node) = CrtNode(NODE_DOWN, NULL, NULL);}
-#line 1249 "RoboParser.tab.c"
+#line 1238 "RoboParser.tab.c"
     break;
 
-  case 24: /* step_direction: LFT  */
-#line 73 "RoboParser.y"
+  case 23: /* step_direction: LFT  */
+#line 72 "RoboParser.y"
          {(yyval.node) = CrtNode(NODE_LEFT, NULL, NULL);}
-#line 1255 "RoboParser.tab.c"
+#line 1244 "RoboParser.tab.c"
     break;
 
-  case 25: /* step_direction: RGHT  */
-#line 74 "RoboParser.y"
+  case 24: /* step_direction: RGHT  */
+#line 73 "RoboParser.y"
           {(yyval.node) = CrtNode(NODE_RIGHT, NULL, NULL);}
-#line 1261 "RoboParser.tab.c"
+#line 1250 "RoboParser.tab.c"
     break;
 
-  case 26: /* number: NUM  */
-#line 77 "RoboParser.y"
+  case 25: /* number: NUM  */
+#line 76 "RoboParser.y"
         {(yyval.node) = CrtNumNode((yyvsp[0].integer));}
-#line 1267 "RoboParser.tab.c"
+#line 1256 "RoboParser.tab.c"
     break;
 
 
-#line 1271 "RoboParser.tab.c"
+#line 1260 "RoboParser.tab.c"
 
       default: break;
     }
@@ -1460,4 +1449,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 80 "RoboParser.y"
+#line 79 "RoboParser.y"
